@@ -1,4 +1,3 @@
-
 #include "Arduino_BMI270_BMM150.h"
 #include <Servo.h>
 
@@ -52,10 +51,6 @@ int fanTestPower = 40;
 int boostTime = 15; 
 
 void setup() {
-  
-
-
-
   ServoF1.attach(10);  // attaches the servo on pin 10 to the servo object for T1
   ServoF2.attach(9);  // attaches the servo on pin 9 to the servo object for T2
   //For ESC, servos must be immediatly be sent 0 signal
@@ -83,23 +78,20 @@ void setup() {
   //Serial1.println("XYZ order for sensor data. By category: milliseconds - gyro angle - acceleration - logmessages ");
   Serial1.println("flight ID: " + flightID);
   Serial1.println("XYZ order for angle and acceleration");
-  Serial1.println("BootTime (ms) \t\t Angle(deg) \t\t\t Acceleration(m/s^2) \t\t\t Log messages");
+  Serial1.println("BootTime (ms),Angle X,Angle Y,Angle Z,Acceleration X,Acceleration Y,Acceleration Z,Log messages");
   
   //IMU setup
   IMU.begin();
   delay(3000);
   Serial.println("Initialized IMU");
 
-
   //Motors must be intialized with 0
   //(Legacy code. Theoretically not a problem because of ESC initilization, but kept just in case)
   ServoF1.write(long(0));
   ServoF2.write(long(0));
-
 }
 
 void loop() {
-
   //APPEND events to logmsg. start each with a comma for separation.
   logmsg = "";
 
@@ -307,30 +299,31 @@ void setLEDs(String color) {
 void updateLog(String msg){
   unsigned long ms = millis();
   Serial1.print(ms);
+  Serial1.print(",");
 
   //Angles
-  Serial1.print("\t\t\t ");
+  //Serial1.print("\t\t\t ");
 
   Serial1.print(angx);
   Serial1.print(",");
   Serial1.print(angy);
   Serial1.print(",");
   Serial1.print(angz);
-  //Accelerations
-  Serial1.print("\t\t\t ");
+  Serial1.print(",");
 
+  //Accelerations
+  //Serial1.print("\t\t\t ");
   Serial1.print(ax);
   Serial1.print(",");
   Serial1.print(ay);
   Serial1.print(",");
   Serial1.print(az);
+
   //Adds msg to line
   if(msg != ""){
-    //Serial1.print(",");
-    Serial1.print("\t\t\t ");
+    Serial1.print(",");
+    //Serial1.print("\t\t\t ");
     Serial1.print(msg);
   }
   Serial1.print("\n");
-  
-
 }
